@@ -1,0 +1,173 @@
+
+
+
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>fein ideas</title>
+<meta name="description" content="thoughts on computer science, technology, engineering, and life">
+<meta name="author" content="JFein">
+
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/blog/feed" />
+<link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/blog/feed/atom" />
+
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+
+<link rel="stylesheet" href="/css/jfein.css?v=1">
+<link rel="stylesheet" href="/css/grid.css?v=1">
+<link rel="stylesheet" media="handheld" href="/css/handheld.css?v=1">
+
+<link rel="stylesheet" href="/css/pygments_murphy.css" type="text/css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script src="/js/libs/modernizr-1.7.min.js"></script>
+<script src="/js/plugins.js"></script>
+<script src="/js/jquery.tweet.js"></script>  
+<script src="/js/site.js"></script>
+
+<!--[if lt IE 7 ]>
+<script src="js/libs/dd_belatedpng.js"></script>
+<script> DD_belatedPNG.fix('img, .png_bg');</script>
+<![endif]-->
+
+<script>
+	var _gaq = [['_setAccount','UA-XXXXX-X'], ['_trackPageview']];
+	(function(d,t) {
+		var g = d.createElement(t);
+		var s = d.getElementsByTagName(t)[0];
+		g.async = 1;
+		g.src = ('https:'==location.protocol?'//ssl':'//www') + '.google-analytics.com/ga.js';
+		s.parentNode.insertBefore(g,s)
+	}(document,'script'));
+</script>
+
+
+</head>
+
+<body>
+	<div id="main_block" class="container container_12">
+		
+<header>
+	<div id="header" class="grid_12">
+		<div id="header_title"><a href="/">fein ideas</a></div>
+		<!--<h2>thoughts on computer science, technology, engineering, and life</h2> -->
+	</div>
+	<div id="navigation" class="grid_12">
+		
+		<ul>
+			<li><a href="/"class="">Home</a></li>
+			<li><a href="/blog"class="">Blog</a></li>
+			<li><a href="/blog/archive"class="">Archives</a></li>
+		</ul>
+	</div>
+</header>
+
+		
+		<div id="prose_block" class="grid_12">
+			
+
+
+
+
+<article class="content_box">
+	<div class="blog_post">
+		<header>
+			<div id="speculative-execution-in-the-human-mind"></div>
+			
+			<h2 class="blog_post_title"><a href="/blog/2013/01/19/speculative-execution-in-the-human-mind" rel="bookmark" title="Permanent Link to Speculative Execution in the Human Mind">Speculative Execution in the Human Mind</a></h2>
+			
+				<h3>TBD</h3>
+			
+			<p><small>
+				<span class="blog_post_date">January 19, 2013</span>
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				categories: <span class="blog_post_categories"><a href='/blog/category/brain'>brain</a>, <a href='/blog/category/systems'>systems</a>, <a href='/blog/category/computation'>computation</a></span>
+			</small></p>
+		</header>
+		<div class="post_prose">
+			
+	<p>By analyzing brain signals of a person making a conscious decision, neuroscientists may have discovered evidence proving free will does not exist. Nature describes an experiment where people under fMRI scans were told to press a button with either their left or right finger after performing some task. By looking at brain activity in the fMRI scan, the researchers could predict, with 60% accuracy, which finger the subject will use to press the button <i>almost a full second</i> before the subject consciously decided which finger to move. When fMRI scans were replaced with electrodes implanted in the brain, the accuracy rose to 80%.</p>
+<p>Does this show that our brains make decisions without any regard to our consciousness, essentially disproving free will? Do we really have conscious control of our actions and thoughts, or are we simply following a deterministic set of rules put forth at birth in the finite state machine we call our minds?</p>
+<p>This first blog post won't try to answer these questions (that'll be for another time). Instead, this seemingly future-predicting brain activity will be explained as a possible analogy to a common optimization technique in computational systems (such as the brain): speculative execution.</p>
+<p><b>Computational Systems</b></p>
+<p>Computational systems - such as the microprocessor in your laptop, the MapReduce cluster running Google's search engine, or the brain inside your head - compute information by executing a series of tasks. These kinds of systems can be viewed abstractly as machines that take in input, execute some computational tasks on that input, and produce an output. The performance of the system is based on how many inputs can be processed in a given period of time. The faster it can process inputs and produce outputs, the faster the computational system.</p>
+<p>Computational machines abstractly consist of individual computing elements that perform the computations; these are the machine's resources. A single computing element can process only one task at a time. Thus, having more computing elements (more resources) is one way to make a computational system faster, since more tasks can be processed simultaneously.</p>
+<p>Now let's try to better understand what these "tasks" are. For computer processors, each line of a program can be thought of as an individual task (in reality that program is turned into assembly, and each assembly instruction is one task, but we're in the land of abstract thought). For MapReduce clusters, each "job" can be thought of as one task. For our brains, each functional action it performs can be thought of as one task (more on this later).</p>
+<p><b>Executing independent tasks</b></p>
+<p>Let’s look at the simple computer program below, which contains 4 independent tasks.</p>
+<div class="pygments_murphy syntax_highlight"><pre><span class="mi">1</span>    <span class="n">w</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><br/><span class="mi">2</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><br/><span class="mi">3</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><br/><span class="mi">4</span>    <span class="n">z</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><br/></pre></div>
+
+<p>Say we have one system with 1 computing element and another with 4 computing elements, and a single computing element can process 1 task per second. How long would these two systems take to run the program above? Since the first system can only process 1 task at a time, the 4 tasks will run sequentially and take 4 seconds total. The second system can utilize all 4 of its computing elements at once; by running all 4 tasks in parallel, the program will finish in only 1 second. By having 4x as many computing elements, we gain a 4x increase in speed!  This is why there has been a trend of increasing number of cores in microprocessors.</p>
+<p><b>Executing dependent tasks</b></p>
+<p>Now let’s look at the following program (the inputs to the functions have changed):</p>
+<div class="pygments_murphy syntax_highlight"><pre><span class="mi">1</span>    <span class="n">w</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><br/><span class="mi">2</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><br/><span class="mi">3</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><br/><span class="mi">4</span>    <span class="n">z</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><br/></pre></div>
+
+<p>How fast will this program run on our two systems? Is the second system still 4x faster than the first? Unfortunately, no. Task 4 relies on the output produced by task 3. Task 3 relies on the output produced by task 2. And task 2 relies on the output produced by task 1. Therefore, task 4 can't run until task 3 finishes, which can't run until task 2 finishes, which can't run until task 1 finishes. No matter how many computing elements in the system, no more than one can be utilized at a time; the other resources simply sit idle. Thus, if a workload consists of many dependent tasks then all of the system's resources will not be fully utilized during overall execution. 4 times more resources will not lead to 4 times faster speed.</p>
+<p><b>Speculative Execution to the rescue</b></p>
+<p>Speculative execution attempts to optimize for dependent tasks. To keep resources utilized, the system takes a sort of gamble. In the previous code example, if the value of variable w was known ahead of time, then task 2 could run on another computing element while task 1 is still being processed. Unfortunately there's no way to know what task 1 will output ahead of time; computational systems cannot predict the future. Instead, the system makes a "speculative guess" as to what task 1 will output and executes task 2 with that guess as the input. </p>
+<p>What if the guess is wrong? Once task 1 completes the system will realize its speculative input to task 2 is incorrect. Task 2 is simply repeated with the right input. Since task 2 was going to be processed after task 1 anyways, nothing is lost by speculating wrong and attempting to execute task 2 early (except the cost of power).</p>
+<p>What if the guess is right? When task 1 is finished, then the system already has the answer to task 2! The system can then continue on to task 3 immediately after task 1, and the overall execution time of the program will be lower than if the 4 tasks were executed sequentially.</p>
+<p><b>Another example</b></p>
+<p>In the previous example, it's very hard to speculate the value of an integer (there's so many possibilities!). A more common speculation is branch prediction - guessing if the code in an "IF" statement should be executed. Let’s look at the following code:</p>
+<div class="pygments_murphy syntax_highlight"><pre><span class="mi">1</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c"># takes a very long time</span><br/><span class="mi">2</span>   <span class="k">if</span> <span class="n">x</span><span class="p">:</span><br/><span class="mi">3</span>        <span class="n">do</span> <span class="n">task</span> <span class="mi">3</span><br/><span class="mi">4</span>   <span class="k">else</span><span class="p">:</span><br/><span class="mi">5</span>       <span class="n">do</span> <span class="n">task</span> <span class="mi">5</span><br/><span class="mi">6</span>   <span class="n">more</span> <span class="n">code</span><span class="o">...</span><br/></pre></div>
+
+<p>If variable x is true, then task 3 should be executed. If x is false, then task 5 should be executed. Task 1, which outputs variable x, takes a <i>very long time</i>. Instead of keeping the entire system idle while task 1 runs, the system can speculate x and utilize its idle resources to run either task 3 or task 5. Since x can only take 2 values, it is much easier to predict than an integer.</p>
+<p>Once x is computed, the system will know if the guess was right or not. If it was right, then the system can simply continue, and it effectively utilized its computing elements to execute tasks in parallel and achieve a speed optimization. If the guess is wrong, then the running task (task 3 or task 5) is immediately stopped and the machine's state returns to as if nothing speculative was run. </p>
+<p>Unfortunately there is a cost to do this "wrong guess correction". However, since the resources would have been idle regardless and there is a large gain for a correct guess, doing speculative execution should overall yield a faster system.</p>
+<p><b>Speculative Execution in the free will experiment</b></p>
+<p>A brain is very different than a computer. A CPU core is meant to execute lines of code sequentially, while brains are extremely parallelized systems that we do not fully understand. Having said that, the brain can be abstractly thought of as a computational system with <i>a lot</i> of computing elements. This abstraction could deem each functional unit of the brain as a computing element (the hippocampus, the motor cortex, etc). Or, each individual neuron can be thought of as a computing element. Regardless, making some sort of abstraction allows the following interpretation of the original free will experiment:</p>
+<div class="pygments_murphy syntax_highlight"><pre><span class="mi">1</span>    <span class="n">finger_to_move</span> <span class="o">=</span> <span class="n">pick_some_finger_to_move</span><span class="p">()</span>  <span class="o">//</span> <span class="n">takes</span> <span class="n">a</span> <span class="nb">long</span> <span class="n">time</span><br/><span class="mi">2</span> <span class="k">if</span> <span class="n">finger_to_move</span> <span class="o">==</span> <span class="n">left_index</span><span class="p">:</span><br/><span class="mi">3</span>       <span class="n">move_left_index_finger</span><span class="p">()</span><br/><span class="mi">4</span>    <span class="k">else</span><span class="p">:</span><br/><span class="mi">5</span>       <span class="n">move_right_index_finger</span><span class="p">()</span><br/><span class="mi">6</span>   <span class="n">more</span> <span class="n">brain</span> <span class="n">functions</span><span class="o">...</span><br/></pre></div>
+
+<p>This is the same type of computation we analyzed in the previous example. Previously, while task 1 was being executed, either task 3 or task 5 would speculatively start; if it picked wrong, then the other would start. This could be happening in our brains as we make conscious decisions to move. The motor cortex could speculatively begin to fire neurons anticipating moving the left finger. If the consciousness ends up choosing the other finger, then the brain simply corrects the error and ends up moving the right finger. If it guessed right, then time and brain power are saved. If it guessed wrong, oh well.</p>
+<p>I believe that computation is a fundamental part of the universe. The idea of parallel computing elements, dependent tasks, and speculative execution were not invented by engineers - they were discovered. These concepts exist in the universe just like the air we breathe and water we drink. If us humans were able to discover the optimization of speculative execution, then I think it's perfectly feasible to think evolution could have discovered the same thing. What this means for free will, I don't know.</p>
+
+		</div>
+	</div>
+</article>
+
+
+
+
+		</div>
+					
+		
+<footer>
+	<div id="footer" class="grid_12">
+		<div class="grid_8">
+			<p>
+			<a href="/blog/feed/index.xml">RSS</a>
+			</p>
+		</div>
+		<div class="grid_4" id="credits">
+			<p>
+			Copyright 2013
+			JFein
+			</p>
+			<p>
+			Powered by <a href="http://www.blogofile.com">Blogofile</a>
+			</p>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+</footer>
+
+	</div>
+</body>
+
+</html>
+
+
+
+
+
+
+
